@@ -18,8 +18,14 @@ UserService.delete = (id)=> {
    return db.any('DELETE FROM pets WHERE owner=${id}; DELETE FROM users WHERE id=${id}',{id:id});
 };
 
-UserService.getPost = username => { 
-   return db.any('SELECT * FROM posts JOIN users ON users.username = post.author WHERE users.username = ${username};',{username})
+UserService.getPost = (id,post_id) => { 
+    if (!post_id){
+    return db.any( 'SELECT users.username, posts.title, posts.body FROM users JOIN posts ON users.id = posts.author WHERE users.id =${id}',{id:id})
+
+    }
+    else 
+    return db.any('SELECT users.username, posts.title, posts.body FROM users JOIN posts ON ${id} = posts.author WHERE posts.id = ${post_id} AND users.id = ${id}',
+    {id, post_id})
 }
 
 UserService.getComments = username => {
