@@ -10,8 +10,8 @@ UserService.read = (username)=> {
    return db.one('SELECT * FROM users WHERE username=${username}',{username:username});
 };
 
-UserService.update = (name, email, id) => {
-   return db.none('UPDATE users SET name = ${name}, email = ${email} WHERE id = (${id})', {name, email, id});
+UserService.update = (username, email, password,id,token) => {
+   return db.none('UPDATE users SET username = ${username}, email = ${email}, password = ${password}, token =${token} WHERE id = ${id}', {username, email, password,id,token});
  }
 
 UserService.delete = (id)=> {
@@ -28,8 +28,11 @@ UserService.getPost = (id,post_id) => {
     {id, post_id})
 }
 
-UserService.getComments = username => {
-    return db.any('SELECT * FROM comments JOIN users ON users.username = comment.author WHERE users.username = ${username};',{username})
+UserService.getComments = (username,comment_id)  => {
+    if (!comment_id){
+        return db.any('SELECT users.username, comments.title, comments.body FROM users JOIN comments ON users.id = comments.author WHERE users.id =${username}',{username:username})
+    }
+    else return db.any('SELECT users.username, comments.title, comments.body FROM users JOIN comments ON users.id = comments.author WHERE users.id =${username} AND comments.id=${comment_id}',{username:username,comment_id:comment_id})
 
 }
 module.exports = UserService;
