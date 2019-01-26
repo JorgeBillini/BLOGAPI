@@ -3,28 +3,28 @@ const UserService = {};
 
 UserService.create = (user)=> {
    console.log(user)
-   return db.none('INSERT INTO users (name, email,password) VALUES (${name},${email},${password})',{name:user.name,email:user.email,password:user.password});
+   return db.none('INSERT INTO users (name, email,password) VALUES (${name},${email},${password});',{name:user.name,email:user.email,password:user.password});
 };
 
 UserService.read = (username)=> {
-   return db.one('SELECT * FROM users WHERE username=${username}',{username:username});
+   return db.one('SELECT * FROM users WHERE username=${username};',{username});
 };
 
 UserService.update = (username, email, password,id,token) => {
-   return db.none('UPDATE users SET username = ${username}, email = ${email}, password = ${password}, token =${token} WHERE id = ${id}', {username, email, password,id,token});
+   return db.one('UPDATE users SET username = ${username}, email = ${email}, password = ${password}, token =${token} WHERE id = ${id};', {username, email, password,id,token});
  }
 
 UserService.delete = (id)=> {
-   return db.any('DELETE FROM pets WHERE owner=${id}; DELETE FROM users WHERE id=${id}',{id:id});
+   return db.any('DELETE FROM posts WHERE author=${id};DELETE FROM comments WHERE author=${id}; DELETE FROM users WHERE id=${id};',{id:id});
 };
 
 UserService.getPost = (id,post_id) => { 
     if (!post_id){
-    return db.any( 'SELECT users.username, posts.title, posts.body FROM users JOIN posts ON users.id = posts.author WHERE users.id =${id}',{id:id})
+    return db.any( 'SELECT users.username, posts.title, posts.body FROM users JOIN posts ON users.id = posts.author WHERE users.id =${id};',{id:id})
 
     }
     else 
-    return db.any('SELECT users.username, posts.title, posts.body FROM users JOIN posts ON ${id} = posts.author WHERE posts.id = ${post_id} AND users.id = ${id}',
+    return db.any('SELECT users.username, posts.title, posts.body FROM users JOIN posts ON ${id} = posts.author WHERE posts.id = ${post_id} AND users.id = ${id};',
     {id, post_id})
 }
 
