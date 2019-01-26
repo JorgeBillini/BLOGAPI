@@ -1,9 +1,8 @@
 const {db} = require('./dbConnect');
 const CommentService = {};
 
-CommentService.create = (user)=> {
-   console.log(user)
-   return db.none('INSERT INTO users (name, email,password) VALUES (${name},${email},${password});',{name:user.name,email:user.email,password:user.password});
+CommentService.create = (author,post_id,title,body)=> {
+   return db.none('INSERT INTO comments (author,post_id,title,body) VALUES (${author},${post_id},${title},${body});',{author,post_id,title,body});
 };
 
 CommentService.read = (id)=> {

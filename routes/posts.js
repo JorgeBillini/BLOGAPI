@@ -46,13 +46,14 @@ PostApp.post('/',(req,res)=>{
     .then(user=>{
         if(!user.token){
             res.json('Not authorized');
+            return
         }
         const author = user.id;
         PostService.create(author,title,body)
         .then(()=>{
             res.json({message:'success'})
         },err=>{
-            res.json({message:err.toString()})
+            res.json({message:'User not found'})
         })
     },err=>{
         res.json({error:err.toString()})
@@ -66,6 +67,7 @@ PostApp.put('/:id',(req,res)=>{
         let author = user.id;
         if (!user.token){
             res.json({message:'not authorized'});
+            return;
         }
         if (!newTitle && !newBody){
             res.json({message:'please insert title or body'})
@@ -88,7 +90,7 @@ PostApp.put('/:id',(req,res)=>{
             res.json({message:'success'})
         },err=>{res.json({error:err.toString()})})
     },err=>{
-        res.json({err:err.toString()})
+        res.json({err:'User not found'})
     })
 
 })
@@ -99,13 +101,14 @@ PostApp.delete('/:id',(req,res)=>{
     .then((user)=>{
         if (!user.token){
             res.json({message:'Not authorized'});
+            return;
         }
         PostService.delete(id)
         .then(()=>{
             res.json({message:'successfully deleted post'})
-        },err=> res.json({message:err.toString()}))
+        },err=> res.json({message:'Post NOT FOUND'}))
     },err=>{
-        res.json({error:err.toString()})
+        res.json({error:'User not found'})
     })
 })
 

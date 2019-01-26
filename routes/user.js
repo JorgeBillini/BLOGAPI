@@ -86,6 +86,7 @@ UserApp.put('/:username',(req,res)=>{
     //add if statements to check what we will be updating(there will be a lot of those, read above)
     if (!user.token){
         res.json({message:'not authorized'})
+        return;
     }
     if (user.password !== password){
         res.json({message:'not authorized'})
@@ -136,6 +137,7 @@ UserApp.delete('/:username',(req,res)=>{
     .then(user=>{
         if (user.token === null){
             res.json({message:' youre not authorized'})
+            return;
         }
         UserService.delete(user.id)
         .then(()=>{
