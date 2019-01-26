@@ -9,11 +9,11 @@ PostService.create = (user)=> {
 PostService.read = (id)=> {
    return db.one('SELECT * FROM posts WHERE posts.id=${id};',{id});
 };
-
+// Modify
 PostService.update = (username, email, password,id,token) => {
    return db.one('UPDATE users SET username = ${username}, email = ${email}, password = ${password}, token =${token} WHERE id = ${id};', {username, email, password,id,token});
  }
-
+ //modify
 PostService.delete = (id)=> {
    return db.any('DELETE FROM posts WHERE author=${id};DELETE FROM comments WHERE author=${id}; DELETE FROM users WHERE id=${id};',{id:id});
 };
@@ -28,9 +28,11 @@ PostService.getPost = (id,post_id) => {
     {id, post_id})
 }
 
-PostService.getComments = (post_id)  => {
-    
-    return db.any('SELECT comments.title, comments.body, comments.author FROM posts JOIN comments ON posts.id = comments.post_id WHERE posts.id =${post_id} AND comments.post_id=${post_id}',{post_id})
+PostService.getComments = (post_id,comment_id)  => {
+    if (!comment_id){
+        return db.any('SELECT comments.title, comments.body, comments.author FROM posts JOIN comments ON posts.id = comments.post_id WHERE posts.id =${post_id} AND comments.post_id=${post_id}',{post_id})
+    }
+    else return db.any('SELECT comments.title, comments.body, comments.author FROM posts JOIN comments ON posts.id = comments.post_id WHERE posts.id = ${post_id} AND comments.post_id = ${post_id} AND comments.id = ${comment_id};',{post_id,comment_id})
 
 }
 module.exports = {
