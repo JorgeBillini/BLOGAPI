@@ -4,10 +4,10 @@ const UserService = require('../services/user');
 const {CommentService} = require('../services/comment');
 const uuidv1 = require('uuid/v1');
 /*
-❌ POST /comment
-✅ GET /comment/:comment_id
+❌ POST /comment **
+✅ GET /comment/:comment_id **
 ❌ PUT /comment/:comment_id
-❌ DEL /comment/:comment_id
+❌ DEL /comment/:comment_id **
 */
 CommentApp.post('/',(req,res)=>{
     const {user,title,body,post_id} = req.body
@@ -25,6 +25,23 @@ CommentApp.post('/',(req,res)=>{
         },err =>res.json({message:err.toString()}))
 
     },err=> res.json({error:'user not found'}))
+})
+CommentApp.delete('/:id',(req,res)=>{
+    const {id} = req.params;
+    const {user} = req.body;
+    UserService.read(user)
+    .then((user)=>{
+        if (!user.token){
+            res.json({message:'not authorized'})
+            return;
+        }
+        CommentService.delete(id)
+        .then(()=>{
+            res.json({message:'successfully deleted comment'})
+        },err=>{
+            res.json({message:'something went wrong'})
+        })
+    },err=>res.json({err:'user not found'}))
 })
 
 CommentApp.get('/:id',(req,res)=>{

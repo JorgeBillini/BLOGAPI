@@ -14,7 +14,7 @@ CommentService.update = (username, email, password,id,token) => {
  }
  //modify
 CommentService.delete = (id)=> {
-   return db.any('DELETE FROM posts WHERE author=${id};DELETE FROM comments WHERE author=${id}; DELETE FROM users WHERE id=${id};',{id:id});
+   return db.any('DELETE FROM comments WHERE id=${id}',{id:id});
 };
 
 CommentService.getPost = (id,post_id) => { 
