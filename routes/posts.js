@@ -6,7 +6,7 @@ const uuidv1 = require('uuid/v1');
 /*
 ❌ POST /post **
 ✅ GET /post/:post_id **
-❌ PUT /post/:post_id
+❌ PUT /post/:post_id **
 ❌ DEL /post/:post_id
 ✅ GET /post/:post_id/comments **
 ✅ GET /post/:post_id/comments/:comment_id **
@@ -91,6 +91,22 @@ PostApp.put('/:id',(req,res)=>{
         res.json({err:err.toString()})
     })
 
+})
+PostApp.delete('/:id',(req,res)=>{
+    const {id} = req.params;
+    const {user} = req.body;
+    UserService.read(user)
+    .then((user)=>{
+        if (!user.token){
+            res.json({message:'Not authorized'});
+        }
+        PostService.delete(id)
+        .then(()=>{
+            res.json({message:'successfully deleted post'})
+        },err=> res.json({message:err.toString()}))
+    },err=>{
+        res.json({error:err.toString()})
+    })
 })
 
 module.exports = {

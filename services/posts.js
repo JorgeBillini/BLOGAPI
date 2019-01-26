@@ -20,7 +20,7 @@ PostService.update = (newTitle,newBody,author,id) => {
  }
  //modify
 PostService.delete = (id)=> {
-   return db.any('DELETE FROM posts WHERE author=${id};DELETE FROM comments WHERE author=${id}; DELETE FROM users WHERE id=${id};',{id:id});
+   return db.any('DELETE FROM comments WHERE post_id=${id};DELETE FROM posts WHERE id=${id};',{id:id});
 };
 
 PostService.getPost = (id,post_id) => { 
