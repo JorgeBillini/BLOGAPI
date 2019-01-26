@@ -84,6 +84,9 @@ UserApp.put('/:username',(req,res)=>{
     UserService.read(username)
     .then((user)=>{
     //add if statements to check what we will be updating(there will be a lot of those, read above)
+    if (!user.token){
+        res.json({message:'not authorized'})
+    }
     if (user.password !== password){
         res.json({message:'not authorized'})
     }

@@ -1,17 +1,22 @@
 const {db} = require('./dbConnect');
 const PostService = {};
 
-PostService.create = (user)=> {
-   console.log(user)
-   return db.none('INSERT INTO users (name, email,password) VALUES (${name},${email},${password});',{name:user.name,email:user.email,password:user.password});
+PostService.create = (author,title,body)=> {
+   return db.none('INSERT INTO posts (author,title,body) VALUES (${author},${title},${body});',{author,title,body});
 };
 
 PostService.read = (id)=> {
    return db.one('SELECT * FROM posts WHERE posts.id=${id};',{id});
 };
 // Modify
-PostService.update = (username, email, password,id,token) => {
-   return db.one('UPDATE users SET username = ${username}, email = ${email}, password = ${password}, token =${token} WHERE id = ${id};', {username, email, password,id,token});
+PostService.update = (newTitle,newBody,author,id) => {
+    if (!newBody){
+    return db.none('UPDATE posts SET  title = ${newTitle} WHERE author = ${author} AND id=${id};', {newTitle,id,author});
+    }
+    else if (!newTitle){
+    return db.none('UPDATE posts SET body = ${newBody} WHERE author = ${author} AND id=${id}', { newBody,author,id});
+    }
+   else return db.none('UPDATE posts SET  title = ${newTitle}, body = ${newBody} WHERE author = ${author} AND id=${id}', {newTitle,newBody,author,id});
  }
  //modify
 PostService.delete = (id)=> {
