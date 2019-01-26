@@ -5,6 +5,7 @@ const uuidv1 = require('uuid/v1');
 //HELPERS
 /*
 TODO: create function to conver user strings to user ids
+refactor code
 */
 //get user
 UserApp.get('/:username',(req,res)=>{

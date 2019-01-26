@@ -9,23 +9,20 @@ CommentService.read = (id)=> {
    return db.one('SELECT * FROM comments WHERE comments.id=${id};',{id});
 };
 // Modify
-CommentService.update = (username, email, password,id,token) => {
-   return db.one('UPDATE users SET username = ${username}, email = ${email}, password = ${password}, token =${token} WHERE id = ${id};', {username, email, password,id,token});
+CommentService.update = (id,title,body,author,post_id) => {
+    if (!title){
+        return db.none('UPDATE comments SET  body = ${body} WHERE id = ${id} AND author=${author} ;', {id,body,author,post_id});
+    }
+    else if (!body){
+        return db.none('UPDATE comments SET title = ${title},  WHERE id = ${id} AND author=${author} ;', {id,title,author,post_id});
+    }
+   else return db.none('UPDATE comments SET title = ${title}, body = ${body} WHERE id = ${id} AND author=${author};', {id,title,body,author,post_id});
  }
  //modify
 CommentService.delete = (id)=> {
    return db.any('DELETE FROM comments WHERE id=${id}',{id:id});
 };
 
-CommentService.getPost = (id,post_id) => { 
-    if (!post_id){
-    return db.any( 'SELECT users.username, posts.title, posts.body FROM users JOIN posts ON users.id = posts.author WHERE users.id =${id};',{id:id})
-
-    }
-    else 
-    return db.any('SELECT users.username, posts.title, posts.body FROM users JOIN posts ON ${id} = posts.author WHERE posts.id = ${post_id} AND users.id = ${id};',
-    {id, post_id})
-}
 
 CommentService.getComments = (post_id,comment_id)  => {
     if (!comment_id){
